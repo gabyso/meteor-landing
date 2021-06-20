@@ -8,7 +8,7 @@ import Alert from '@material-ui/lab/Alert';
 import { HEADER_HEIGHT } from '../globals/consts';
 import { renderEmptyState } from '../globals/helpers';
 
-const ALERT_DURATION = 3000;
+const ALERT_DURATION = 5000;
 
 
 const useStyles = makeStyles(() => ({

@@ -1,5 +1,5 @@
 import { makeStyles, TextField } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { JUMPED_YEAR_MESSAGE, MAX_YEAR, MIN_YEAR } from "../globals/consts";
 import { IAlertMessage, IMeteor, IMeteorsByYears } from "../globals/interfaces";
 import MeteorCard from './MeteorCard';
@@ -14,7 +14,7 @@ interface IMeterosViewProps {
 
 const useStyles = makeStyles(() => ({
 	root: {
-		height: `100%`,
+		height: '100%',
 		width: '80vw',
 		margin: 'auto',
 		display: 'flex',
@@ -65,27 +65,32 @@ const MeteorsView = ({ meteors, setAlert }: IMeterosViewProps): JSX.Element => {
 	useEffect(() => {
 		if (minMass) {
 			let newFiltered: IMeteor[] = [];
-			const referencedYear = year ? Number(year) : MAX_YEAR;
-			let i = 0;
+			const chosenYear = year ? Number(year) : MAX_YEAR;
+			let yearWithResults = chosenYear;
+			let i;
 
-			for (; i <= MAX_YEAR; i++) {
-				newFiltered = getFilteredByYear(referencedYear + i);
+			const maxPosibleDiffrence = Math.max(MAX_YEAR - chosenYear, chosenYear - MIN_YEAR);
+
+			for (i = 0; i <= maxPosibleDiffrence; i++) {
+				newFiltered = getFilteredByYear(chosenYear + i);
 				
 				if (newFiltered.length) {
-					setYear((referencedYear + i).toString());
+					yearWithResults = chosenYear + i;
 					break;
 				} else {
-					newFiltered = getFilteredByYear(referencedYear - i);
+					newFiltered = getFilteredByYear(chosenYear - i);
 					if (newFiltered.length) {
-						setYear((referencedYear - i).toString());
+						yearWithResults = chosenYear - i;
 						break;
 					}
 				}
 			}
 
-			if (i !== 0 && newFiltered.length) {
+			if (yearWithResults !== chosenYear) {
+				setYear(yearWithResults.toString());
 				setAlert({ message: JUMPED_YEAR_MESSAGE, type: 'info' });
 			}
+
 			setFilteredMeteors(newFiltered);
 		}
 	}, [minMass]);
